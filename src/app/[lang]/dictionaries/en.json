@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "title": "Srcflow",
+    "description": "Visual editor for Next.js that writes real source code",
+    "keywords": [],
+    "siteName": "",
+    "ogTitle": "",
+    "ogDescription": ""
+  },
+  "notFound": {
+    "title": "Not Found",
+    "description": "Could not find requested resource",
+    "home": "Return Home"
+  }
+}

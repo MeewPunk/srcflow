@@ -1,0 +1,1271 @@
+/* floats under the Info handle and slides with it (--follow-right-x from DrawerLayout) */
+.trigger {
+  position: fixed;
+  top: calc(24px + var(--control-lg) + 12px);
+  right: 20px;
+  z-index: 60;
+  transform: translateX(var(--follow-right-x, 0px));
+  display: grid;
+  place-items: center;
+  width: var(--control-lg);
+  height: var(--control-lg);
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease, scale 0.12s ease,
+    transform 0.8s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.trigger:hover {
+  color: var(--accent);
+}
+.trigger:active {
+  scale: 0.92;
+}
+.trigger:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: 2px;
+}
+
+.dim {
+  position: fixed;
+  inset: 0;
+  z-index: 1900;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+  transition: opacity 0.35s ease;
+}
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+/* while dragging: the drop frames take over */
+.layerHidden {
+  opacity: 0;
+}
+/* leaving select mode (closing): the frames fade, the bottom tools / Ctrl hint sink away —
+   all within the teardown delay, so nothing just vanishes */
+.layerOut {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.slideDownOut {
+  animation: slideDownOut 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+  pointer-events: none;
+}
+@keyframes slideDownOut {
+  to {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+/* the way back in for what slideDownOut takes away */
+.riseIn {
+  animation: riseIn 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+.fadeOut {
+  animation: fadeOut 0.2s ease both;
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+/* a pill joining / leaving a row: its width (and the row gap after it) eases, so the
+   row re-centres smoothly instead of jumping */
+.collapseIn,
+.collapseOut {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.collapseIn {
+  animation: collapseIn 0.3s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+.collapseOut {
+  animation: collapseOut 0.2s ease both;
+}
+@keyframes collapseIn {
+  from {
+    max-width: 0;
+    padding-inline: 0;
+    border-width: 0;
+    margin-inline-start: var(--collapse-start, 0px);
+    margin-inline-end: var(--collapse-end, -12px);
+    opacity: 0;
+  }
+  to {
+    max-width: 240px;
+  }
+}
+@keyframes collapseOut {
+  from {
+    max-width: 240px;
+  }
+  to {
+    max-width: 0;
+    padding-inline: 0;
+    border-width: 0;
+    margin-inline-start: var(--collapse-start, 0px);
+    margin-inline-end: var(--collapse-end, -12px);
+    opacity: 0;
+  }
+}
+/* tab content swapped in place */
+.swapIn {
+  animation: dropFadeIn 0.25s ease both;
+}
+.outline {
+  position: fixed;
+  border: 1px solid;
+  opacity: 0.35;
+  pointer-events: none;
+  transition: transform 2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1.6s ease;
+}
+.outlineOn {
+  border-width: 2px;
+  opacity: 1;
+}
+/* the slot the gap opens: exactly where the element will land */
+.dropHint {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 2150;
+  animation: dropFadeIn 0.2s ease both;
+  transition: top 0.18s cubic-bezier(0.32, 0.72, 0, 1), left 0.18s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.dropHintLabel {
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--surface);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+/* the target container's other children, so the slot reads among its neighbours */
+.dropKid {
+  position: fixed;
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+  pointer-events: none;
+  z-index: 2145;
+  transition: top 0.18s cubic-bezier(0.32, 0.72, 0, 1), left 0.18s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.18s cubic-bezier(0.32, 0.72, 0, 1), height 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: dropFadeIn 0.2s ease both;
+}
+.dropKidLabel {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+@keyframes dropFadeIn {
+  from {
+    opacity: 0;
+  }
+}
+/* while dragging: the container the element will land in, with its name */
+.dropParent {
+  position: fixed;
+  border: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+  pointer-events: none;
+  z-index: 2140;
+  animation: dropFadeIn 0.2s ease both;
+  transition: top 0.18s cubic-bezier(0.32, 0.72, 0, 1), left 0.18s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.18s cubic-bezier(0.32, 0.72, 0, 1), height 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.dropOut {
+  animation: fadeOut 0.2s ease both;
+}
+.dropParentLabel {
+  position: absolute;
+  bottom: 100%;
+  left: -2px;
+  margin-bottom: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--surface);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  transition: translate 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+/* container starts at the viewport top: keep its name on screen, inside the frame */
+.dropParentLabelIn {
+  translate: 6px calc(100% + 8px);
+}
+.structBar {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  z-index: 2200;
+}
+.structMsg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.structMsg:hover:not(:disabled) {
+  color: var(--foreground);
+}
+.structMsg:disabled {
+  cursor: default;
+}
+.structMsg svg {
+  transition: rotate 0.2s ease;
+}
+.changeChevronDown {
+  rotate: 180deg;
+}
+.changeList {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 8px);
+  max-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+}
+.changeScroll {
+  padding: 8px;
+}
+.changeOl {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.changeItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.changeItem:first-child {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.changeNum {
+  flex: none;
+  min-width: 20px;
+  color: var(--muted);
+}
+.changeHint {
+  flex: none;
+  margin: 0;
+  padding: 8px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.structReset {
+  composes: btnGhost from "./ui.module.css";
+  border-radius: 999px;
+}
+.structSave {
+  composes: btnPrimary from "./ui.module.css";
+  border-radius: 999px;
+}
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.elPreview {
+  position: fixed;
+  left: 50%;
+  top: 26%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 32px));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  pointer-events: none;
+  z-index: 2400;
+  animation: fadeInBackdrop 0.2s ease both;
+}
+.elPreviewOut {
+  animation: fadeOut 0.2s ease both;
+}
+.elPreviewMock {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 140px;
+  min-height: 56px;
+  padding: 8px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 4%, transparent);
+  overflow: hidden;
+}
+.elPreviewInfo {
+  min-width: 0;
+}
+.elPreviewTag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--foreground);
+}
+.elPreviewDesc {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+/* mock samples */
+.mockEl {
+  padding: 4px 8px;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 25%, transparent);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-sm);
+  color: var(--foreground);
+}
+.mockHeading {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--foreground);
+}
+.mockBox {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+.mockField {
+  width: 110px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--fs-xs);
+}
+.mockBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.mockLink {
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  text-decoration: underline;
+}
+.mockList {
+  margin: 0;
+  padding-inline-start: 20px;
+  font-size: var(--fs-xs);
+  color: var(--foreground);
+  text-align: left;
+}
+.mockTable {
+  border-collapse: collapse;
+  font-size: var(--fs-xs);
+  color: var(--foreground);
+}
+.mockTable th,
+.mockTable td {
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  padding: 4px 8px;
+}
+.mockFig {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  text-align: center;
+}
+.mockQuote {
+  margin: 0;
+  padding-inline-start: 12px;
+  border-inline-start: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--foreground);
+}
+/* bottom-center tools in select mode: "add element" + the trash drop target */
+.bottomTools {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+  z-index: 2200;
+}
+.trashZone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: var(--control-lg);
+  height: var(--control-lg);
+  padding: 0 16px;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease,
+    color 0.15s ease, border-color 0.15s ease;
+}
+/* a dragged element is over it — releasing deletes */
+.trashZone > span {
+  --collapse-start: -8px;
+  --collapse-end: 0px;
+}
+.trashZoneHot {
+  border-style: solid;
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--danger-foreground);
+  transform: scale(1.12);
+}
+/* leave element select mode — a quiet pill beside the accent "add element" */
+.exitMode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-lg);
+  padding: 0 20px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: inherit;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.exitMode:hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--surface));
+}
+.paletteTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-lg);
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: inherit;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+/* round icon action in the bottom bar (acts on the clicked element) */
+.barIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--control-lg);
+  height: var(--control-lg);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.barIcon:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--surface));
+}
+.barIcon:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.cloneBackdrop {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--background) 45%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2500;
+  animation: cloneFade 0.2s ease both;
+}
+.cloneSheet {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(560px, calc(100vw - 32px));
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  z-index: 2600;
+  animation: cloneIn 0.3s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes cloneFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes cloneIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+.cloneRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 4%, transparent);
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: start;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.cloneRow:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.clonePreview {
+  flex: none;
+  width: 140px;
+  max-height: 72px;
+  overflow: hidden;
+  padding: 8px;
+  border-radius: var(--radius-control);
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  pointer-events: none;
+}
+.clonePreview > * {
+  max-width: 100%;
+}
+.cloneCls {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+  font-family: var(--font-mono);
+}
+.cloneCopy {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border-radius: var(--radius-control);
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  transition: color 0.15s ease;
+}
+.cloneRow:hover .cloneCopy {
+  color: var(--accent);
+}
+.cloneEmpty {
+  padding: 16px 4px;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+.palette {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 32px));
+  height: 46vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  z-index: 2300;
+  animation: paletteIn 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.paletteOut {
+  animation: slideDownOut 0.45s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes paletteIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+.paletteHead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--foreground);
+}
+.paletteHead > span {
+  margin-inline-end: auto;
+}
+.paletteBody {
+  padding-inline-end: 0.5rem;
+}
+.paletteGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.paletteLabel {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+.paletteTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.paletteTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.paletteTag:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.dragTip {
+  position: fixed;
+  left: 16px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-md);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  pointer-events: none;
+  z-index: 2100;
+}
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  padding: 2px 8px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--foreground);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+/* padding-bottom bridges the gap to the outline so the pointer never leaves
+   inspector UI on the way up (leaving it would refocus another element);
+   left-aligned because the element legend panel covers the right edge */
+
+.editPanel {
+  --picker-bottom-inset: 64px; /* lets the last class row scroll clear of the save pill */
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: min(680px, calc(100vw - 32px));
+  height: 50vh;
+  transition: height 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  z-index: 2100;
+  animation: editIn 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+/* minimized: the height (set inline to the head row's px) shrinks while everything below
+   the head row fades out. no overflow clipping — the element's name pill sits outside the
+   panel's top edge */
+.editPanel > :not(:first-child):not(.editActions) {
+  transition: opacity 0.3s ease; /* the save pill keeps its own slide transition */
+}
+.editPanelMin > :not(:first-child),
+.editPanelMin .editActions {
+  opacity: 0;
+  pointer-events: none;
+}
+/* rises from below the viewport like a bottom drawer (its 16px bottom gap included) */
+@keyframes editIn {
+  from {
+    transform: translateX(-50%) translateY(calc(100% + 16px));
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+.editOut {
+  /* DESELECT_MS / CLOSE_EASE in ElementInspector.tsx — the element slides home in step */
+  animation: editOut 0.6s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes editOut {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    transform: translateX(-50%) translateY(calc(100% + 16px));
+  }
+}
+.editTop {
+  position: fixed;
+  top: 24px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2100;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  animation: editTopIn 0.45s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+@keyframes editTopIn {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.editTopOut {
+  animation: editTopOut 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes editTopOut {
+  from {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+}
+.editTop > * {
+  pointer-events: auto;
+}
+.editHeadTools {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+  animation: editToolsIn 0.45s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+@keyframes editToolsIn {
+  from {
+    opacity: 0;
+    transform: translate(-24px, -50%);
+  }
+}
+.editToolsOut {
+  animation: editToolsOut 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes editToolsOut {
+  to {
+    opacity: 0;
+    transform: translate(-120%, -50%);
+  }
+}
+.editHeadTool {
+  display: grid;
+  place-items: center;
+  width: var(--control-lg);
+  height: var(--control-lg);
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.editHeadTool:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+.editHeadTool:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.editHeadToolOn,
+.editHeadToolOn:hover {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+}
+/* floating save pill (same look as .structBar); hidden until the pointer nears the
+   panel bottom (footOpen) or keyboard focus is inside — pointer-events off while hidden */
+.editActions {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 16px);
+  transition:
+    transform 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.4s ease;
+}
+.editActionsOn,
+.editPanel:has(:focus-visible) .editActions {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+.editStatus {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.editSave {
+  composes: btnPrimary from "./ui.module.css";
+  border-radius: 999px;
+}
+
+.legend {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 240px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+  animation: legendIn 0.85s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+.legend:hover {
+  opacity: 1;
+}
+@keyframes legendIn {
+  from {
+    opacity: 0;
+    transform: translate(40px, -50%);
+  }
+  to {
+    opacity: 0.4;
+    transform: translate(0, -50%);
+  }
+}
+.legendOut {
+  animation: legendOut 0.9s cubic-bezier(0.32, 0.72, 0, 1) 0.35s both;
+}
+@keyframes legendOut {
+  from {
+    opacity: 0.4;
+    transform: translate(0, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(40px, -50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .legend {
+    animation: none;
+  }
+}
+.legendScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-inline-end: 8px;
+}
+.legendHead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px 8px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--foreground);
+}
+.legendClose {
+  flex: none;
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  width: var(--control-xs);
+  height: var(--control-xs);
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.legendClose:hover {
+  background: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+.respIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--control-xs);
+  height: var(--control-xs);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease,
+    scale 0.12s ease;
+}
+.respIcon:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+.respIcon:active {
+  scale: 0.92;
+}
+/* also under the pointer: otherwise :hover outranks it and a click shows no change */
+.respIconOn,
+.respIconOn:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent);
+}
+/* device sizes: one choice out of four, so a segmented group (matches ThemeManager's
+   .segmented) — sets them apart from the bordered on/off toggles beside it */
+.respSeg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+.respSegBtn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--control-xs);
+  height: calc(var(--control-xs) - 4px);
+  border: none;
+  border-radius: calc(var(--radius-control) - 2px);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.respSegBtn:hover {
+  color: var(--foreground);
+}
+.respSegBtnOn,
+.respSegBtnOn:hover {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.respSlider {
+  flex: 1 1 120px;
+  min-width: 0;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.respNum {
+  flex: none;
+  min-width: 48px;
+  text-align: right;
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  color: var(--muted);
+}
+.panelClose {
+  flex: none;
+  margin-inline-start: auto;
+  display: grid;
+  place-items: center;
+  width: var(--control-xs);
+  height: var(--control-xs);
+  border: none;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.panelClose:hover {
+  background: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+.panelHead {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 12px;
+}
+/* the element's name floats as a pill just above the panel's top-left corner (outside the
+   card), leaving the head row to the tools; it rides the panel's slide in/out */
+.panelTag {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  padding: 4px 12px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--foreground);
+  pointer-events: none;
+}
+.panelOps {
+  margin-inline-start: auto;
+  display: flex;
+  gap: 4px;
+}
+.panelOp {
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  touch-action: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.panelOp:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+.panelOpOn,
+.panelOpOn:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+.copyBar {
+  flex-basis: 100%;
+  display: flex;
+  gap: 8px;
+}
+.copyInput {
+  width: 64px;
+  height: var(--control-sm);
+  padding: 0 8px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+}
+.copyGo {
+  height: var(--control-sm);
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-weight: 600;
+  cursor: pointer;
+}
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  text-align: left;
+}
+.legendRow:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+.legendRowOn,
+.legendRowOn:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.legendSwatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-control);
+}
+.legendTag {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.legendId {
+  margin-inline-start: 2px;
+  color: var(--accent);
+}
+.legendCls {
+  margin-inline-start: 1px;
+  opacity: 0.6;
+}
+.legendDim {
+  flex: none;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+.instanceBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  color: var(--muted);
+}
+.instanceLink {
+  align-self: flex-start;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  transition: background 0.15s ease;
+}
+.instanceLink:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}

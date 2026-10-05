@@ -1,0 +1,251 @@
+.wrap {
+  flex: none;
+  padding: 4px 16px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: var(--surface);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.trigger:hover {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.trigger:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  flex: none;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  animation: tmFade 0.2s ease both;
+}
+.modal {
+  width: 100%;
+  max-width: 680px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  box-shadow: var(--shadow-lg);
+  animation: tmPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  overflow: hidden;
+}
+.modalHead {
+  composes: modalHead from "./ui.module.css";
+}
+.modalTitle {
+  composes: modalTitle from "./ui.module.css";
+}
+.closeBtn {
+  composes: iconBtn from "./ui.module.css";
+}
+
+@keyframes tmFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tmPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.loading {
+  padding: 8px 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  text-align: center;
+}
+.error {
+  padding: 12px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fieldLabel {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.segmented {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+.segBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.segBtn:hover {
+  color: var(--foreground);
+}
+.segBtnOn,
+.segBtnOn:hover {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.segBtn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.colorInput {
+  flex: none;
+  width: var(--control-xs);
+  height: var(--control-xs);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-radius: var(--radius-control);
+  background: none;
+  cursor: pointer;
+}
+.colorInput:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+}
+.colorName {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rangeValue {
+  align-self: flex-end;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.select {
+  width: 100%;
+  height: var(--control-md);
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 2px;
+}
+.ghostBtn {
+  composes: btnGhost from "./ui.module.css";
+}
+.primaryBtn {
+  composes: btnPrimary from "./ui.module.css";
+}

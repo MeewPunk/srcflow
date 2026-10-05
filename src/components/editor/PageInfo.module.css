@@ -1,0 +1,141 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+.title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.iconBtn {
+  composes: iconBtn from "./ui.module.css";
+  position: relative;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 12px;
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.facts dt {
+  color: var(--muted);
+}
+.facts dd {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.muted {
+  color: var(--muted);
+}
+.hint {
+  flex-basis: 100%;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.chips {
+  gap: 4px;
+}
+.chip {
+  padding: 2px 8px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+/* same segmented track as the edit panel's device sizes */
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap; /* in a narrow drawer whole chips wrap, never letters ("bas/e") */
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+.segBtn {
+  padding: 2px 8px;
+  white-space: nowrap;
+  border: none;
+  border-radius: calc(var(--radius-control) - 2px);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+button.segBtn {
+  cursor: pointer;
+}
+button.segBtn:hover {
+  color: var(--foreground);
+}
+.segBtnOn,
+button.segBtnOn:hover {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.ok {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.issues {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.issue {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.issue:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.issue:disabled {
+  cursor: default;
+}
+.warn {
+  flex: none;
+  margin-top: 2px;
+  color: var(--danger, var(--accent));
+}

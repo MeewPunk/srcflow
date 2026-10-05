@@ -1,0 +1,373 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
+.scrollBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-inline-end: 8px;
+  padding-bottom: var(--picker-bottom-inset, 8px);
+}
+
+.selected {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  min-height: 40px;
+  max-width: calc(100vw - 230px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+.selected::-webkit-scrollbar {
+  display: none;
+}
+.empty {
+  align-self: center;
+  padding: 0 4px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.selectedChip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 4px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+.clearAll {
+  margin-left: auto;
+  align-self: center;
+  padding: 4px 12px;
+  border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  color: light-dark(var(--danger), #f87171);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.clearAll:hover {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
+}
+/* a block that opens / closes in place: its height (and the gap after it) eases */
+.reveal {
+  display: grid;
+  grid-template-rows: 1fr;
+  flex: none;
+  animation: revealIn 0.25s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.reveal > * {
+  min-height: 0;
+  overflow: clip;
+  overflow-clip-margin: 4px;
+}
+.revealOut {
+  animation: revealOut 0.25s ease both;
+}
+.controls > .reveal {
+  --reveal-gap: 8px;
+}
+@keyframes revealIn {
+  from {
+    grid-template-rows: 0fr;
+    margin-bottom: calc(var(--reveal-gap, 12px) * -1);
+    opacity: 0;
+  }
+}
+@keyframes revealOut {
+  to {
+    grid-template-rows: 0fr;
+    margin-bottom: calc(var(--reveal-gap, 12px) * -1);
+    opacity: 0;
+  }
+}
+/* tab content swapped in place */
+.swapIn {
+  animation: swapIn 0.25s ease both;
+}
+@keyframes swapIn {
+  from {
+    opacity: 0;
+  }
+}
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-sm);
+  padding: 0 8px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+.searchBox:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.searchIcon {
+  flex: none;
+  color: var(--muted);
+}
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  background: none;
+  color: var(--foreground);
+  font-size: var(--fs-sm);
+  font-family: var(--font-mono);
+  outline: none;
+}
+.searchClear {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+  cursor: pointer;
+}
+.customBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-sm);
+  padding: 0 8px;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+.customAdd {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  cursor: pointer;
+}
+.customAdd:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.noResult {
+  padding: 12px 4px;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* categories: a segmented track (like ThemeManager's .segmented / the device sizes)
+   so they read as navigation, not as the bordered class chips below */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+.tab {
+  padding: 4px 12px;
+  border: none;
+  border-radius: calc(var(--radius-control) - 2px);
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.tab:hover {
+  color: var(--foreground);
+}
+.tabOn,
+.tabOn:hover {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.groupLabel {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  vertical-align: -1px;
+  border-radius: var(--radius-control);
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  flex: none;
+}
+.swatchTransparent {
+  background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+    linear-gradient(-45deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%),
+    linear-gradient(-45deg, transparent 75%, #ccc 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease,
+    opacity 0.15s ease;
+}
+.chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.chipOn,
+.chipOn:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.chipInherited {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: color-mix(in srgb, var(--accent) 70%, var(--muted));
+}
+
+.suggest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  animation: swapIn 0.2s ease both;
+}
+.suggestHint {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+/* per-group custom value: the group's stem is fixed, only the value is typed */
+.groupAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 2px 2px 8px;
+  border: 1px dashed color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: var(--radius-control);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+}
+.groupAddStem {
+  color: var(--muted);
+}
+.groupAddInput {
+  width: 6ch;
+  border: none;
+  background: none;
+  color: var(--foreground);
+  font: inherit;
+  outline: none;
+}
+.chipCustom {
+  position: relative;
+  display: inline-flex;
+}
+.chipCustom .chip {
+  border-style: dashed;
+}
+.chipRemove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.chipRemove:hover {
+  color: var(--danger, var(--foreground));
+}
+
+/* group with no effect on the selected element: dimmed; clicks explain why (ClassPicker) */
+.groupBlocked .chip:not(.chipOn),
+.groupBlocked .groupAdd {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.groupBlocked .groupAddInput {
+  cursor: not-allowed;
+}
+.groupReason {
+  margin-left: 8px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.tabBlocked {
+  opacity: 0.5;
+}

@@ -1,0 +1,70 @@
+.anchor {
+  position: fixed;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.tip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 240px;
+  width: max-content;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: var(--radius-card);
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--foreground);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.28),
+    0 4px 10px -4px rgba(15, 23, 42, 0.18);
+  animation: tipIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes tipIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tip::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+.top::after {
+  top: 100%;
+  left: calc(50% + var(--arrow-shift, 0px));
+  margin: -4px 0 0 -4px;
+}
+.bottom::after {
+  bottom: 100%;
+  left: calc(50% + var(--arrow-shift, 0px));
+  margin: 0 0 -4px -4px;
+}
+.left::after {
+  left: 100%;
+  top: calc(50% + var(--arrow-shift, 0px));
+  margin: -4px 0 0 -4px;
+}
+.right::after {
+  right: 100%;
+  top: calc(50% + var(--arrow-shift, 0px));
+  margin: -4px -4px 0 0;
+}

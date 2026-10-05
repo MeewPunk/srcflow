@@ -1,0 +1,87 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  animation: fadeIn 0.2s ease both;
+}
+
+.card {
+  width: 100%;
+  max-width: 360px;
+  padding: 24px;
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  animation: pop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.message {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.cancel {
+  composes: btnGhost from "./ui.module.css";
+  flex: 1;
+}
+.confirm {
+  composes: btnPrimary from "./ui.module.css";
+  flex: 1;
+}
+.confirm.danger {
+  background: var(--danger);
+  color: var(--danger-foreground);
+}
+.confirm.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 88%, var(--foreground));
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .card {
+    animation: none;
+  }
+}

@@ -1,0 +1,62 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.head {
+  composes: head from "./PageInfo.module.css";
+}
+.title {
+  composes: title from "./PageInfo.module.css";
+}
+.note {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.groupTitle {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+}
+.list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--control-xs);
+}
+.keys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--foreground);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+.desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  text-align: right;
+}

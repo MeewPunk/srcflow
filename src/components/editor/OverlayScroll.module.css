@@ -1,0 +1,104 @@
+.host {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.viewport {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.viewport::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.scrollbar {
+  position: absolute;
+  width: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.scrollbarOn {
+  opacity: 1;
+}
+.thumb {
+  position: absolute;
+  right: 0;
+  width: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 32%, transparent);
+}
+
+/* scroll-to-top/bottom, shown on hover; sits above --picker-bottom-inset (the room a
+   host keeps clear for a bottom bar, e.g. the edit panel's save pill) */
+.jump {
+  position: absolute;
+  right: 14px;
+  bottom: calc(var(--picker-bottom-inset, 8px) + 4px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.jumpOn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.jumpBtn {
+  display: grid;
+  place-items: center;
+  width: var(--control-xs);
+  height: var(--control-xs);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.jumpBtn:hover {
+  background: color-mix(in srgb, var(--foreground) 8%, var(--surface));
+}
+/* a jump button comes and goes with its scroll edge; its slot (and the gap) eases
+   shut so the other one slides instead of jumping */
+.jumpBtn {
+  animation: jumpBtnIn 0.2s ease both;
+}
+.jumpBtnOut {
+  animation: jumpBtnOut 0.2s ease both;
+}
+.jumpBtn:first-child {
+  --jump-gap-top: 0px;
+  --jump-gap-bottom: -6px;
+}
+.jumpBtn:only-child {
+  --jump-gap-bottom: 0px;
+}
+@keyframes jumpBtnIn {
+  from {
+    height: 0;
+    margin-top: var(--jump-gap-top, -6px);
+    margin-bottom: var(--jump-gap-bottom, 0px);
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+@keyframes jumpBtnOut {
+  to {
+    height: 0;
+    margin-top: var(--jump-gap-top, -6px);
+    margin-bottom: var(--jump-gap-bottom, 0px);
+    opacity: 0;
+    scale: 0.6;
+  }
+}

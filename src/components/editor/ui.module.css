@@ -1,0 +1,90 @@
+/* Shared controls for CSS Module components — pull in with `composes` (DESIGN.md §12) */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--control-md);
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--radius-control);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn:focus-visible,
+.iconBtn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+}
+
+.btnPrimary {
+  composes: btn;
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.btnPrimary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 88%, var(--foreground));
+}
+
+.btnGhost {
+  composes: btn;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: var(--foreground);
+}
+.btnGhost:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--foreground) 14%, transparent);
+}
+
+.btnDanger {
+  composes: btn;
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger);
+}
+.btnDanger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger) 22%, transparent);
+}
+
+.iconBtn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--control-sm);
+  height: var(--control-sm);
+  border: none;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.iconBtn:hover {
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+.modalTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,56 @@
+{
+  "name": "srcflow",
+  "version": "0.1.0",
+  "description": "A visual editor for Next.js that writes real source code",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeewPunk/srcflow.git"
+  },
+  "homepage": "https://github.com/MeewPunk/srcflow#readme",
+  "bugs": {
+    "url": "https://github.com/MeewPunk/srcflow/issues"
+  },
+  "private": true,
+  "keywords": [
+    "nextjs",
+    "tailwindcss",
+    "visual-editor",
+    "page-builder",
+    "react"
+  ],
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "yarn@1.22.22",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@formatjs/intl-localematcher": "^0.9.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "lucide-react": "^1.48.0",
+    "negotiator": "^1.1.0",
+    "next": "16.3.6",
+    "postcss": "^8.5.28",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/node": "^4.3.3",
+    "@types/negotiator": "^0.6.5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "typescript": "^5"
+  }
+}

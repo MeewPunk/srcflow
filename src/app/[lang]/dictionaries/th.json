@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "title": "Srcflow",
+    "description": "เครื่องมือแก้หน้าเว็บ Next.js แบบ visual ที่เขียนลงโค้ดจริง",
+    "keywords": [],
+    "siteName": "",
+    "ogTitle": "",
+    "ogDescription": ""
+  },
+  "notFound": {
+    "title": "ไม่พบหน้านี้",
+    "description": "ไม่พบหน้าที่คุณต้องการ",
+    "home": "กลับหน้าแรก"
+  }
+}
